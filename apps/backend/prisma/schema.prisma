@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+model User{
+  id String @id @default(uuid())
+  email String @unique
+  password String
+  createdAt DateTime @default(now())
+  guesses Guess[]
+}
+model FrontPage{
+  id String @id @default(uuid())
+  sourceId String @unique
+  date DateTime 
+  imageUrl String
+  actualDate DateTime
+  createdAt DateTime @default(now()) 
+  guesses Guess[]
+  newspaperTitle String
+  region String
+}
+model Guess{
+  id String  @id @default(uuid())
+  userId String?
+  user User? @relation(fields: [userId], references: [id])
+  frontPageId  String
+  frontPage FrontPage @relation(fields:[frontPageId], references: [id])
+  guessedYear Int
+  distanceInYears Int
+  points Int
+  correct Boolean
+  createdAt DateTime @default(now()) 
+}
